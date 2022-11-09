@@ -1,0 +1,310 @@
+
+Create Database:
+•	Create Database [University DB];
+•	Use [University DB];                 *Used to specify which database to be used
+
+
+Create Tables:
+1.	Create Department table
+Create Table [UniDB_Department](
+dept_name varchar(50) NOT NULL primary key,
+building varchar(50) not null,
+       budget int not null);
+2.	Create Instructor table 
+Create Table [UniDB_Instructor](
+instructor_id int NOT NULL PRIMARY KEY,
+[name] varchar(20) not null,
+salary int not null,
+dept_name varchar(20) references UniDB_Department(dept_name)
+);
+3.	Create Student Table
+Create Table [UniDB_Student](
+student_id int NOT NULL PRIMARY KEY,
+name varchar(20) NOT NULL,
+tot_cred int not null,
+dept_name varchar(20) references UniDB_Department(dept_name),
+instructor_id int references UniDB_Instructor(instructor_id)
+);
+
+4.	Create Course table
+
+Create table [UniDB_Course](
+course_id int NOT NULL PRIMARY KEY,
+title varchar(20) NOT NULL,
+credits int NOT NULL,
+prereq int NULL REFERENCES UniDB_Course(course_id),
+dept_name varchar(20) references UniDB_Department(dept_name));
+
+5.	Create Time Slot Table
+
+CREATE TABLE UniDB_Time_Slot(
+time_slot_id  VARCHAR(30) NOT NULL PRIMARY KEY, 
+day varchar(2) NOT NULL,
+start_time time NOT NULL,
+end_time time NOT NULL,
+CONSTRAINT valid_day CHECK ([day] in ('SUN','MON','TUES','WED','THU','FRI','SAT'))
+);
+
+
+
+
+
+6.	Create Classroom Table
+
+CREATE TABLE UniDB_classroom(
+building char(1) NOT NULL,
+room_number int NOT NULL,
+capacity int NULL,
+CONSTRAINT PK_classroom_id PRIMARY KEY ([building],[room_number])
+);
+
+7.	Create Section Table
+
+CREATE TABLE UniDB_section(
+section_id varchar(4) NOT NULL,
+semester varchar(15) NOT NULL,
+year int NOT NULL,
+instructor_id int NOT NULL REFERENCES UniDb_Instructor(instructor_id),
+student_id int NULL REFERENCES UniDB_Student(student_id),
+course_id int NOT NULL REFERENCES UniDb_Course(course_id),
+time_slot_id  VARCHAR (30) NOT NULL REFERENCES UniDB_Time_Slot(time_slot_id),
+building char(1) NOT NULL,
+room_number int NOT NULL,
+grade char(1) NULL,
+CONSTRAINT valid_grade CHECK (grade in ('F','D','C','B','A')),
+FOREIGN KEY (building,room_number)  REFERENCES UniDB_classroom(building,room_number)
+);
+
+Insert Values :
+
+INSERT INTO UniDB_Department VALUES ('Public Health','Burnham Hall',2000),
+('Applied Health Sciences','Taft Hall',7800),
+('Management','Behavorial Sciences',6754),
+('Management Administration','Douglas Hall',6870),
+('Architecture','Arch Hall',3000),
+('Architecture and Planning','Architecture Planning',2000),
+('Business','Liautaud',100000),
+('Business Administration','Liautaud',106000),
+('Engineering','Lecture Centre A',98500),
+('Aeronautics Engineering','Behavorial Sciences',97500),
+('Law','Lecture Centre D',50000), 
+('Design and Arts','SCE',90000),
+('Dentistry','Smith Hall',80000), 
+('Nursing','UIC Hospital',60000),
+('Medicine','Lecture Centre C',15000),
+('Pharmacy','Lecture Centre C',25000),
+('Music','Michael Jackson',20000),
+('Social Works','Taft Hall',30000),
+('Urban Planning','Adams Hall',42000),
+('Public Affairs','Taft Hall',12000);
+
+INSERT INTO UniDB_Instructor VALUES 
+(101,'Jimmy Tent',34535,'Nursing'),(102,'Deeps Ahuja',34535,'Nursing'),
+(103,'Vipul Tembey',45345,'Medicine'),(104,'Tushar Rastogi',23423,'Public Affairs'),
+(105,'Rhea Dsouza',34345,'Management Administration'),
+(106,'Linda Hill',67567,'Social Works'),
+(107,'Elizabeth Carter',34554,'Pharmacy'),
+(108,'Robert Downey',67867,'Urban Planning'),(109,'Chris Evans',23434,'Music'),
+(110,'Tyron Smith',45674,'Dentistry'),(111,'Ckimbelie Parera',35463,'Design and Arts'),
+(112,'Bryna Dsouza',24353,'Law'),(113,'Twinkle Sequira',79766,'Aeronautics Engineering'),
+(114,'Tanya Dcosta',46765,'Business Administration'),
+(115,'Jessica Alphonzo',45647,'Engineering'),
+(116,'Darshan Raval',45646,'Architecture and Planning'),
+(117,'Dyone Lobo',45658,'Business'),(118,'Rachel Craster',34536,'Architecture'),
+(119,'Kathy Fernandez',34646,'Management'),(120,'Sonal Paul',344645,'Applied Health Sciences');
+
+
+INSERT INTO UniDB_Student VALUES (201,'Jason Dsouza',12,'Nursing',101),
+(202,'Mathew Gomez',12,'Nursing',102),
+(203,'Alroy Pinto',14,'Medicine',103),
+(204,'Sushma',15,'Public Affairs',104),
+(205,'Kuldeep Yadav',16,'Management Administration',105),
+(206,'Jashwant kulshrestra',11,'Social Works',106),
+(207,'Ashutosh Sahu',10,'Pharmacy',107),
+(208,'Alison Dcoza',12,'Urban Planning',108),
+(209,'Vikram Kumar',16,'Music',109),
+(210,'Supreet Singh',18,'Dentistry',110),
+(211,'Vibhu Dagar',20,'Design and Arts',111),
+(212,'Sambhav Jain',12,'Law',112),
+(213,'Devika Reddy',14,'Aeronautics Engineering',113),
+(214,'Ashwini Dubey',16,'Business Administration',114),
+(215,'Twinkle Katiyar',8,'Engineering',115),
+(216,'Aniket Singh',10,'Architecture and Planning',116),
+(217,'Apeksha Deshpande',6,'Business',117),
+(218,'Pranidhi Sharma',14,'Architecture',118),
+(219,'Pranoti Sharma',12,'Management',119),
+(220,'Shachi Vyas',20,'Applied Health Sciences',120);
+
+
+Insert into UniDB_Course Values 
+(301,'Structure Design',2,NULL,'Architecture and Planning'),
+(303,'Data Mining',2,NULL,'Management'),
+(305,'Corporate Finance',2,NULL,'Engineering'),
+(306,'Thermodynamics',4,NULL,'Engineering'),
+(308,'Case Closure',2,NULL,'Social Works'),
+(310,'Mural Art',4,NULL,'Design and Arts'),
+(311,'Intro to Management',2,NULL,'Business Administration'),
+(313,'How to CRP',3,NULL,'Music'),
+(314,'Opera Singing',4,NULL,'Design and Arts'),
+(315,'Indian Classical',3,NULL,'Design and Arts'),
+(316,'Sanitization II',4,NULL,'Management'),
+(317,'City Planning',3,NULL,'Aeronautics Engineering'),
+(302,'Building Design',4,301,'Business Administration'),
+(304,'Data Visualization',4,303,'Engineering'),
+(307,'Gravitation',4,306,'Engineering'),
+(309,'Pro-Bono',4,308,'Business'),
+(312,'Stats for Mangement',4,311,'Business');
+
+INSERT INTO UniDB_Time_Slot VALUES ('MON_09:00_to_12:00','MON','09:00','12:00'),
+('MON_17:30_to_20:30','MON','17:30','20:30'),
+('TUES_09:00_to_12:00','TUES','09:00','12:00'),
+('TUES_12:00_to_15:00','TUES','12:00','15:00'),
+('WED_09:00_to_12:00','WED','09:00','12:00'),
+('WED_15:00_to_18:00','WED','15:00','18:00'),
+('THU_12:00_to_15:00','THU','12:00','15:00'),
+('THU_17:30_to_20:30','THU','17:30','20:30'),
+('FRI_09:00_to_12:00','FRI','09:00','12:00'),
+('FRI_12:00_to_15:00','FRI','12:00','15:00'),
+('FRI_17:30_to_20:30','FRI','17:30','20:30'),
+('SAT_09:00_to_12:00','SAT','09:00','12:00'),
+('SAT_12:00_to_15:00','SAT','12:00','15:00');
+
+
+Insert into UniDB_section VALUES ('ARC2','FALL',2021,102,201,301,'FRI_12:00_to_15:00','A',102,'A'),
+('ARC2','FALL',2020,102,202,302,'MON_09:00_to_12:00','A',105,'B'),
+('LBA1','SPRING',2022,103,203,303,'FRI_09:00_to_12:00','B',203,'A'),
+('MGM2','FALL',2022,104,204,304,'SAT_12:00_to_15:00','C',207,'D'),
+('MGM2','FALL',2022,105,205,305,'SAT_12:00_to_15:00','C',207,'B'),
+('LAW1','SPRING',2022,106,206,306,'THU_12:00_to_15:00','D',201,'F'),
+('LAW2','SPRING',2022,107,207,307,'TUES_12:00_to_15:00','D',206,'A'),
+('LAW2','SPRING',2022,108,208,308,'TUES_12:00_to_15:00','D',206,'B'),
+('MDC8','FALL',2022,109,209,309,'WED_09:00_to_12:00','E',203,'A'),
+('MDC8','FALL',2020,110,210,310,'WED_09:00_to_12:00','E',208,'A'),
+('LAW5','SPRING',2021,111,211,311,'THU_17:30_to_20:30','D',209,'F'),
+('MSC2','FALL',2021,112,212,312,'FRI_09:00_to_12:00','F',301,'C'),
+('MSC2','FALL',2021,113,213,313,'FRI_12:00_to_15:00','F',306,'B'),
+('BUS1','SPRING',2021,114,214,314,'FRI_17:30_to_20:30','H',201,'A'),
+('BUS5','FALL',2021,115,215,315,'MON_09:00_to_12:00','H',205,'C'),
+('ENG2','FALL',2021,116,216,316,'MON_17:30_to_20:30','G',206,'F'),
+('ENG2','SPRING',2019,117,217,317,'SAT_09:00_to_12:00','G',209,'A'),
+('ENG2','SPRING',2019,118,218,311,'SAT_12:00_to_15:00','G',206,'B'),
+('UPL3','FALL',2019,119,219,312,'THU_12:00_to_15:00','I',309,'A'),
+('PBH9','FALL',2019,120,220,313,'THU_17:30_to_20:30','J',204,'B'),
+('ENG8','FALL',2020,115,215,314,'TUES_09:00_to_12:00','G',206,'F'),
+('ENG9','SPRING',2020,116,216,315,'TUES_12:00_to_15:00','G',209,'B'),
+('BUS2','FALL',2020,117,217,316,'WED_09:00_to_12:00','H',301,'B'),
+('BUS8','SPRING',2020,118,218,317,'WED_15:00_to_18:00','H',205,'A'),
+('BUS8','SPRING',2020,119,219,308,'WED_15:00_to_18:00','H',205,'A'),
+('BUS7','FALL',2020,120,220,309,'WED_15:00_to_18:00','H',301,'C'),
+('BUS5','FALL',2019,111,211,310,'SAT_12:00_to_15:00','H',205,'A');
+
+
+
+SELECT * FROM UniDB_Department order by budget desc;
+SELECT * FROM UniDB_Instructor;
+SELECT * FROM UniDb_Student;
+SELECT * FROM UniDb_Course;
+SELECT * FROM UniDB_Time_Slot
+SELECT * FROM UniDB_classroom;
+SELECT * FROM UniDB_section;
+
+
+
+
+
+
+
+
+
+
+
+--QUERY 1
+SELECT UniDB_Student.instructor_id , UniDB_Student.name , UniDb_Student.student_id , UniDb_Student.name
+FROM UniDB_Student 
+INNER JOIN UniDB_Instructor 
+ON UniDB_Student .instructor_id = UniDB_Instructor.instructor_id
+
+SELECT * FROM UniDb_Student;
+
+--QUERY 2
+SELECT UniDB_Student.name , UniDB_Student.tot_cred 
+FROM UniDB_Student
+WHERE dept_name= 'Business';
+
+SELECT * FROM UniDB_Department; 
+--Query 3
+SELECT UniDB_Department.dept_name , MIN(budget) AS [Budget]
+FROM  UniDB_Department 
+GROUP BY UniDB_Department.dept_name
+HAVING MIN([budget])>50000;
+
+--Query 4
+SELECT UniDB_Instructor.name , UniDB_Instructor.salary
+FROM UniDB_Instructor 
+WHERE salary=(SELECT MAX(salary) FROM UniDB_Instructor);
+
+
+--Query 5
+SELECT COUNT(name) FROM UniDb_Student WHERE tot_cred=12;
+
+--QUERY 6
+
+SELECT UniDb_Course.title, UniDB_section.semester
+FROM UniDb_Course
+INNER JOIN UniDB_section
+ON UniDb_Course.course_id = UniDB_section.course_id;
+
+--QUERY 7
+SELECT UniDb_Student.name
+FROM UniDb_Student
+WHERE student_id
+IN (SELECT student_id FROM UniDB_section WHERE semester= 'FALL' );
+--QUERY 8
+--Number of student in each department
+SELECT COUNT(student_id) AS NumberOfStudents , dept_name 
+FROM  UniDb_Student
+GROUP BY dept_name;
+
+--QUERY 9
+--List the courses in which prerequisites is not required
+SELECT course_id,title,dept_name 
+FROM UniDb_Course
+WHERE prereq IS NULL;
+
+
+
+
+
+--QUERY 10
+--Num of students in each course
+SELECT UniDb_Course.course_id, COUNT(UniDb_Student.student_id) AS NumberOfStudents
+FROM UniDb_Student
+INNER JOIN UniDB_Department ON UniDB_Department.dept_name = UniDb_Student.dept_name
+INNER JOIN UniDb_Course ON UniDB_Department.dept_name = UniDb_Course.dept_name
+GROUP BY course_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
